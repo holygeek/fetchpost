@@ -8,6 +8,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 )
 
@@ -106,7 +107,33 @@ func saveComments(post Post, arg, url string, folder string) {
 		bail("saveComments(): error: %v", err)
 	}
 	maybeSavePostUrl(dir, url)
+	maybeReportScoreChange(mails, post)
 	mails.SavePost(nil, post, 0)
+}
+
+func maybeReportScoreChange(mails *Mails, post Post) {
+	mid := post.MessageId()
+	key, exist := mails.keyForMessageId[mid]
+	if !exist {
+		return
+	}
+
+	msg := mails.mustGetMessage(key)
+	score, exist := msg.Header["X-Score"]
+	if !exist || len(score[0]) == 0 {
+		printError("X-Score header missing in %s", key)
+		return
+	}
+	oldScore, err := strconv.Atoi(score[0])
+	if err != nil {
+		printError("X-Score: %v", err)
+		return
+	}
+	newScore := post.Points()
+
+	if oldScore != newScore {
+		fmt.Printf("Points changed from %d to %d\n", oldScore, newScore)
+	}
 }
 
 func renamePostDir(olddir, newdir string) {

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"net/mail"
 	"os"
 	"time"
 
@@ -128,4 +129,12 @@ func (mails *Mails) SaveMail(mail *Email) error {
 		return fmt.Errorf("maildir Close(): %v", err)
 	}
 	return nil
+}
+
+func (mails *Mails) mustGetMessage(key string) *mail.Message {
+	msg, err := mails.md.Message(key)
+	if err != nil {
+		bail("mustGetMessage(): missing mail for key %s: %v", key, err)
+	}
+	return msg
 }
