@@ -17,6 +17,7 @@ type Post interface {
 	Body() string
 	Children() []string
 	PostType() string
+	Removed() bool
 }
 
 var nonTextRe = regexp.MustCompile(`[^0-9a-zA-Z_-]+`)

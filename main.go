@@ -81,7 +81,11 @@ func main() {
 		os.Exit(0)
 	}
 
-	saveComments(post, arg, arg, *folder)
+	added, updated, deleted := saveComments(post, arg, url, *folder)
+	if !*Quiet {
+		fmt.Printf("Comments: %d added, %d updated, %d deleted\n",
+			added, updated, deleted)
+	}
 
 	postDir := getPostDir(post)
 	fmt.Println(postDir)
@@ -96,7 +100,7 @@ func main() {
 	}
 }
 
-func saveComments(post Post, arg, url string, folder string) {
+func saveComments(post Post, arg, url string, folder string) (added, updated, deleted int) {
 	dir := getPostDir(post)
 	if folder == DEFAULT_FOLDER && arg != url && arg != dir {
 		renamePostDir(arg, dir)
@@ -108,7 +112,7 @@ func saveComments(post Post, arg, url string, folder string) {
 	}
 	maybeSavePostUrl(dir, url)
 	maybeReportScoreChange(mails, post)
-	mails.SavePost(nil, post, 0)
+	return mails.SavePost(nil, post, 0)
 }
 
 func maybeReportScoreChange(mails *Mails, post Post) {
@@ -173,7 +177,7 @@ func fileExists(path string) bool {
 	return true
 }
 
-func (mails *Mails) SavePost(parent, child Post, threadLevel int) {
+func (mails *Mails) SavePost(parent, child Post, threadLevel int) (added, updated, deleted int) {
 	mid := child.MessageId()
 	key, exist := mails.keyForMessageId[mid]
 	if exist {
@@ -196,6 +200,11 @@ func (mails *Mails) SavePost(parent, child Post, threadLevel int) {
 				}
 				verbose("Renamed %s to %s", path, p)
 			}
+			if child.Removed() {
+				deleted++
+			} else {
+				updated++
+			}
 		}
 		showThreadLevel(threadLevel, "*")
 	} else {
@@ -205,20 +214,29 @@ func (mails *Mails) SavePost(parent, child Post, threadLevel int) {
 			bail("SavePost(): %v", err)
 		}
 		showThreadLevel(threadLevel, "+")
+		added++
 	}
 
-	mails.SavePostChildren(child, threadLevel+1)
+	n, u, d := mails.SavePostChildren(child, threadLevel+1)
+	added += n
+	updated += u
+	deleted += d
+	return
 }
 
-func (mails *Mails) SavePostChildren(p Post, threadLevel int) {
+func (mails *Mails) SavePostChildren(p Post, threadLevel int) (added, updated, deleted int) {
 	for _, idStr := range p.Children() {
 		child, err := fetchHNPost(idStr)
 		if err != nil {
 			printError("error: %v", err)
 			continue
 		}
-		mails.SavePost(p, child, threadLevel)
+		a, u, d := mails.SavePost(p, child, threadLevel)
+		added += a
+		updated += u
+		deleted += d
 	}
+	return
 }
 
 func showThreadLevel(level int, symbol string) {

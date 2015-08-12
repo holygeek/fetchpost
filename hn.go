@@ -102,6 +102,10 @@ func (i *item) PostType() string {
 	return i.Type
 }
 
+func (i *item) Removed() bool {
+	return i.Deleted
+}
+
 func GetHNPost(url *url.URL) Post {
 	idStr := url.Query().Get("id")
 	if len(idStr) == 0 {
