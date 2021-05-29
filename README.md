@@ -2,7 +2,7 @@
 
 fetchpost - Save HN post and comments as mails in maildir format
 
-## HOW TO USE
+## How to Use
 
 1. Install:
    ```sh
@@ -29,6 +29,6 @@ fetchpost - Save HN post and comments as mails in maildir format
    $ fetchpost Ask_HN_Any_movies_that_changed_your_life_
    ```
 
-## BUGS
+## Bugs
 
 Definitely!
