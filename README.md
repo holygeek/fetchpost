@@ -2,6 +2,8 @@
 
 fetchpost - Save HN post and comments as mails in maildir format
 
+[![asciicast](https://asciinema.org/a/24850.svg)](https://asciinema.org/a/24850)
+
 ## How to Use
 
 1. Install:
