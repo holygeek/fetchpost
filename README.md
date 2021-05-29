@@ -11,7 +11,7 @@ fetchpost - Save HN post and comments as mails in maildir format
    $ go get github.com/holygeek/fetchpost
    ```
 2. Fetch the posts as mails:
-   ````sh
+   ```sh
    $ fetchpost 'https://news.ycombinator.com/item?id=10041477'
    ...
    Ask_HN_Any_movies_that_changed_your_life_
