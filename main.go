@@ -57,6 +57,14 @@ func main() {
 		url = arg
 		postCache.Url = url
 	} else {
+		dir, file := filepath.Split(filepath.Clean(arg))
+		if dir != "" {
+			err := os.Chdir(dir)
+			if err != nil {
+				bail(err.Error())
+			}
+		}
+		arg = file
 		url = readUrlFile(arg)
 		if strings.HasPrefix(url, "https://") {
 			postCache.Url = url
