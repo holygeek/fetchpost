@@ -46,7 +46,7 @@ func main() {
 		arg = postCache.Url
 	} else {
 		if flag.NArg() != 1 {
-			printError("Usage: post2mail <url|dir>")
+			printError("Usage: fetchpost <url|dir>")
 			os.Exit(1)
 		}
 		arg = flag.Arg(0)
