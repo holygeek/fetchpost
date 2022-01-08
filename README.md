@@ -22,6 +22,11 @@ fetchpost - Save HN post and comments as mails in maildir format
    set sort = threads
    ignore subject to date
    unignore x-date
+   set wrap=72
+   set markers=no # no '+' at wrapped lines
+   set collapse_unread=yes
+   set uncollapse_jump=yes
+   set pager_index_lines=12
    EOF
 
    $ mutt -F muttrc -f Ask_HN_Any_movies_that_changed_your_life_
