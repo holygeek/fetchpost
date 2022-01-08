@@ -51,7 +51,7 @@ func (i *item) Subject() (subject string) {
 	if len(i.Title) == 0 {
 		s := i.Text
 		if len(s) > 80 {
-			s = s[0:80]
+			s = string([]rune(s)[0:80])
 		}
 		subject = strings.Replace(s, "\n", " ", -1)
 	} else {
