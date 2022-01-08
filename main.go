@@ -239,6 +239,10 @@ func (mails *Mails) SavePostChildren(p Post, threadLevel int) (added, updated, d
 			printError("error: %v", err)
 			continue
 		}
+		if child == nil {
+			printError("WARN p.Children(%s) gave nil child (could be temporary error). Parent: %+v", idStr, p)
+			continue
+		}
 		a, u, d := mails.SavePost(p, child, threadLevel)
 		added += a
 		updated += u
