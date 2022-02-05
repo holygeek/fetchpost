@@ -88,6 +88,8 @@ func main() {
 		fmt.Printf("%s\n", string(buf))
 		os.Exit(0)
 	}
+	postDir := getPostDir(post)
+	fmt.Println(postDir)
 
 	added, updated, deleted := saveComments(post, arg, url, *folder)
 	if !*Quiet {
@@ -95,7 +97,6 @@ func main() {
 			added, updated, deleted)
 	}
 
-	postDir := getPostDir(post)
 	fmt.Println(postDir)
 	postTestFile := filepath.Join(postDir, postDir+".json")
 	buf, err := json.Marshal(postCache)
